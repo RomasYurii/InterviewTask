@@ -1,4 +1,10 @@
 from fastapi import FastAPI
+from . import models
+from .database import engine
+from .routers import projects
+
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Travel Planner API",
@@ -6,7 +12,5 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.get("/")
-def read_root():
-    return {"status": "ok", "message": "Travel Planner API is running!"}
 
+app.include_router(projects.router)
