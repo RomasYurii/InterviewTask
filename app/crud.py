@@ -8,11 +8,9 @@ def get_project(db: Session, project_id: int):
     """ Get one project by ID"""
     return db.query(models.Project).filter(models.Project.id == project_id).first()
 
-
 def get_projects(db: Session, skip: int = 0, limit: int = 100):
     """ Get all projects"""
     return db.query(models.Project).offset(skip).limit(limit).all()
-
 
 def create_project(db: Session, project: schemas.ProjectCreate):
     """Create a new project"""
@@ -45,6 +43,20 @@ def create_project(db: Session, project: schemas.ProjectCreate):
 
     return db_project
 
+def update_project(db: Session, project_id: int, project_update: schemas.ProjectUpdate):
+    """Update a project"""
+    db_project = get_project(db, project_id)
+    if not db_project:
+        return None
+
+    update_data = project_update.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(db_project, key, value)
+
+    db.commit()
+    db.refresh(db_project)
+    return db_project
 
 def delete_project(db: Session, project_id: int):
     """Delete a project"""

@@ -33,3 +33,32 @@ async def create_project(project: schemas.ProjectCreate, db: Session = Depends(g
 def read_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """Retrieves all projects."""
     return crud.get_projects(db, skip=skip, limit=limit)
+
+
+
+@router.get("/{project_id}", response_model=schemas.ProjectResponse)
+def read_project(project_id: int, db: Session = Depends(get_db)):
+    """Retrieves a single project."""
+    db_project = crud.get_project(db, project_id=project_id)
+    if db_project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return db_project
+
+
+@router.patch("/{project_id}", response_model=schemas.ProjectResponse)
+def update_project(project_id: int, project_update: schemas.ProjectUpdate, db: Session = Depends(get_db)):
+    """Updates a project."""
+    db_project = crud.update_project(db, project_id=project_id, project_update=project_update)
+    if db_project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return db_project
+
+
+@router.delete("/{project_id}")
+def delete_project(project_id: int, db: Session = Depends(get_db)):
+    """Deletes a project."""
+    success = crud.delete_project(db, project_id=project_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    return {"detail": "Project successfully deleted"}
