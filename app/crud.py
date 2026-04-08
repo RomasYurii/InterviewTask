@@ -77,6 +77,12 @@ def delete_project(db: Session, project_id: int):
 
 
 
+def get_place(db: Session, project_id: int, place_id: int):
+    """Get one place by ID"""
+    return db.query(models.Place).filter(
+        models.Place.id == place_id,
+        models.Place.project_id == project_id
+    ).first()
 
 def add_place_to_project(db: Session, project_id: int, place: schemas.PlaceCreate):
     """Add a place to project"""
@@ -104,7 +110,6 @@ def add_place_to_project(db: Session, project_id: int, place: schemas.PlaceCreat
     db.commit()
     db.refresh(new_place)
     return new_place
-
 
 def update_place(db: Session, place_id: int, place_update: schemas.PlaceUpdate):
     """Update a place"""

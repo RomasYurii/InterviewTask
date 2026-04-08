@@ -42,3 +42,14 @@ def get_project_places(project_id: int, db: Session = Depends(get_db)):
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     return project.places
+
+
+@router.get("/{place_id}", response_model=schemas.PlaceResponse)
+def get_single_place(project_id: int, place_id: int, db: Session = Depends(get_db)):
+    """Retrieves a single place."""
+    place = crud.get_place(db=db, project_id=project_id, place_id=place_id)
+
+    if not place:
+        raise HTTPException(status_code=404, detail="Place not found in this project")
+
+    return place
