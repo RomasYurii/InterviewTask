@@ -9,7 +9,7 @@
    ```
 2. **Environment Variables**
 
-     Create a .env file in the root directory and add your database credentials:
+     Create a .env file in the root directory and add your database credentials as in .env.example:
 
 
 3. **Build and Run**
